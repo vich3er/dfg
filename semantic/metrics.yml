@@ -1,0 +1,120 @@
+# Семантичний шар «Відгуки пацієнтів». Єдине місце, де визначено метрики та виміри.
+version: "1.0"
+catalog_owner: "Кафедра системного проєктування, ЛР12 (Domain Knowledge Hub)"
+reviewed_at: "2026-11-19"
+
+fact:
+  table: fact_feedback_mention
+  alias: f
+  grain: "одна згадка однієї теми (підкласу таксономії) в одному відгуку пацієнта"
+
+dimensions:
+  department:  {table: dim_department, alias: dep, join_on: "dep.department_key = f.department_key", column: "dep.department_name", description: "Відділення (SCD1)"}
+  division:    {table: dim_department, alias: dep, join_on: "dep.department_key = f.department_key", column: "dep.division_name",   description: "Підрозділ (рівень вище відділення)"}
+  topic_class: {table: dim_topic,      alias: t,   join_on: "t.topic_key = f.topic_key",             column: "t.class_label",       description: "Клас таксономії (рівень 1)"}
+  topic:       {table: dim_topic,      alias: t,   join_on: "t.topic_key = f.topic_key",             column: "t.topic_label",       description: "Підклас таксономії (рівень 2)"}
+  topic_iri:   {table: dim_topic,      alias: t,   join_on: "t.topic_key = f.topic_key",             column: "t.topic_iri",         description: "IRI підкласу таксономії"}
+  channel:     {table: dim_channel,    alias: c,   join_on: "c.channel_key = f.channel_key",         column: "c.channel_name",      description: "Канал збору відгуку"}
+  year:        {table: dim_date,       alias: dd,  join_on: "dd.date_key = f.date_key",              column: "dd.year",             description: "Рік"}
+  quarter:     {table: dim_date,       alias: dd,  join_on: "dd.date_key = f.date_key",              column: "dd.quarter_label",    description: "Квартал (напр. 2026-Q3)"}
+  month:       {table: dim_date,       alias: dd,  join_on: "dd.date_key = f.date_key",              column: "dd.month_label",      description: "Місяць (напр. 2026-09)"}
+  risk_group:  {table: dim_patient,    alias: p,   join_on: "p.patient_key = f.patient_key",         column: "p.risk_group",        description: "Група ризику пацієнта на дату відгуку (SCD2)"}
+  age_group:   {table: dim_patient,    alias: p,   join_on: "p.patient_key = f.patient_key",         column: "p.age_group",         description: "Вікова група"}
+
+metrics:
+  mentions:
+    label: "Кількість згадок"
+    definition: "Кількість згадок тем у відгуках (рядків факту)."
+    formula: "SUM(f.mention_count)"
+    unit: "згадок"
+    additivity: "адитивна"
+    owner: "Керівник аналітики якості (Quality Analytics)"
+    sources: [fact_feedback_mention.mention_count]
+    constraints: "Один відгук із n темами дає n згадок; не дорівнює кількості відгуків."
+    round: null
+    status: "approved"
+    reviewed_at: "2026-11-19"
+  feedback_count:
+    label: "Кількість відгуків"
+    definition: "Кількість унікальних відгуків пацієнтів."
+    formula: "COUNT(DISTINCT f.feedback_id)"
+    unit: "відгуків"
+    additivity: "неадитивна (distinct)"
+    owner: "Керівник аналітики якості (Quality Analytics)"
+    sources: [fact_feedback_mention.feedback_id]
+    constraints: "Не можна сумувати за темами/класами — відгук з кількома темами рахується в кожній (подвійний облік)."
+    round: null
+    status: "approved"
+    reviewed_at: "2026-11-19"
+  negative_mentions:
+    label: "Кількість негативних згадок"
+    definition: "Згадки з sentiment_score < -0.2."
+    formula: "SUM(f.is_negative)"
+    unit: "згадок"
+    additivity: "адитивна"
+    owner: "Керівник аналітики якості (Quality Analytics)"
+    sources: [fact_feedback_mention.is_negative]
+    constraints: "Поріг -0.2 фіксований у ETL; зміна порогу потребує перезавантаження даних."
+    round: null
+    status: "approved"
+    reviewed_at: "2026-11-19"
+  negative_share:
+    label: "Частка негативних згадок"
+    definition: "Відсоток негативних згадок від усіх згадок у вибраному зрізі."
+    formula: "100.0 * SUM(f.is_negative) / SUM(f.mention_count)"
+    unit: "%"
+    additivity: "неадитивна (відношення)"
+    owner: "Керівник аналітики якості (Quality Analytics)"
+    sources: [fact_feedback_mention.is_negative, fact_feedback_mention.mention_count]
+    constraints: "Для підсумків рахується як відношення сум, а не середнє часток; надійно при ≥30 згадок у групі."
+    round: 1
+    status: "approved"
+    reviewed_at: "2026-11-19"
+  avg_sentiment:
+    label: "Середня тональність"
+    definition: "Середнє значення sentiment_score по згадках (шкала від -1 до +1)."
+    formula: "AVG(f.sentiment_score)"
+    unit: "бали [-1; 1]"
+    additivity: "неадитивна"
+    owner: "Керівник аналітики якості (Quality Analytics)"
+    sources: [fact_feedback_mention.sentiment_score]
+    constraints: "Оцінка тональності синтетична; середнє зважене кількістю згадок (відгуки з багатьма темами мають більшу вагу)."
+    round: 3
+    status: "approved"
+    reviewed_at: "2026-11-19"
+  critical_mentions:
+    label: "Критичні згадки (безпека пацієнта)"
+    definition: "Негативні згадки з тем безпеки/моніторингу (MedicationSafety, AlarmResponse, VitalsMonitoring) із тональністю < -0.5."
+    formula: "SUM(f.is_critical)"
+    unit: "згадок"
+    additivity: "адитивна"
+    owner: "Відповідальний за безпеку пацієнтів"
+    sources: [fact_feedback_mention.is_critical]
+    constraints: "Є сигналом для ручної перевірки, а не клінічним висновком."
+    round: null
+    status: "approved"
+    reviewed_at: "2026-11-19"
+  avg_wait_minutes:
+    label: "Середній час очікування"
+    definition: "Середня заявлена тривалість очікування (хв) у відгуках на теми очікування."
+    formula: "AVG(f.wait_minutes)"
+    unit: "хв"
+    additivity: "неадитивна"
+    owner: "Начальник відділу організації медичної допомоги"
+    sources: [fact_feedback_mention.wait_minutes]
+    constraints: "wait_minutes заповнено лише для підкласів EmergencyWait, AppointmentScheduling, DischargeProcess; для інших тем NULL ігнорується."
+    round: 1
+    status: "approved"
+    reviewed_at: "2026-11-19"
+  avg_rating:
+    label: "Середня загальна оцінка"
+    definition: "Середня загальна оцінка відгуку (1–5), усереднена по згадках."
+    formula: "AVG(f.overall_rating)"
+    unit: "бали [1; 5]"
+    additivity: "неадитивна"
+    owner: "Керівник аналітики якості (Quality Analytics)"
+    sources: [fact_feedback_mention.overall_rating]
+    constraints: "Оцінка належить відгуку і повторюється для кожної його згадки, тому середнє зважене кількістю тем; для оцінки на рівні відгуку використовуйте окремий запит."
+    round: 2
+    status: "draft"
+    reviewed_at: "2026-11-19"

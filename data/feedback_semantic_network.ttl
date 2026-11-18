@@ -1,0 +1,42 @@
+@prefix fb: <https://hub.lnu.edu.ua/onto/patient-feedback#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+fb:Feedback a rdfs:Class ; rdfs:label "Відгук пацієнта"@uk .
+
+fb:StaffAttitude a rdfs:Class ; rdfs:subClassOf fb:Feedback ; rdfs:label "Ставлення персоналу"@uk .
+fb:TreatmentSafety a rdfs:Class ; rdfs:subClassOf fb:Feedback ; rdfs:label "Лікування і безпека"@uk .
+fb:WaitingOrganization a rdfs:Class ; rdfs:subClassOf fb:Feedback ; rdfs:label "Очікування й організація"@uk .
+fb:Facilities a rdfs:Class ; rdfs:subClassOf fb:Feedback ; rdfs:label "Умови перебування"@uk .
+fb:ConditionMonitoring a rdfs:Class ; rdfs:subClassOf fb:Feedback ; rdfs:label "Моніторинг стану"@uk .
+fb:Administration a rdfs:Class ; rdfs:subClassOf fb:Feedback ; rdfs:label "Адміністрування та вартість"@uk .
+fb:DoctorCommunication a rdfs:Class ; rdfs:subClassOf fb:StaffAttitude ; rdfs:label "Комунікація лікаря"@uk .
+fb:NurseCare a rdfs:Class ; rdfs:subClassOf fb:StaffAttitude ; rdfs:label "Догляд медсестер"@uk .
+fb:Respect a rdfs:Class ; rdfs:subClassOf fb:StaffAttitude ; rdfs:label "Повага й етика"@uk .
+fb:TreatmentEffectiveness a rdfs:Class ; rdfs:subClassOf fb:TreatmentSafety ; rdfs:label "Ефективність лікування"@uk .
+fb:PainManagement a rdfs:Class ; rdfs:subClassOf fb:TreatmentSafety ; rdfs:label "Контроль болю"@uk .
+fb:MedicationSafety a rdfs:Class ; rdfs:subClassOf fb:TreatmentSafety ; rdfs:label "Безпека ліків"@uk .
+fb:PatientInformation a rdfs:Class ; rdfs:subClassOf fb:TreatmentSafety ; rdfs:label "Інформування пацієнта"@uk .
+fb:EmergencyWait a rdfs:Class ; rdfs:subClassOf fb:WaitingOrganization ; rdfs:label "Очікування в невідкладній допомозі"@uk .
+fb:AppointmentScheduling a rdfs:Class ; rdfs:subClassOf fb:WaitingOrganization ; rdfs:label "Запис на прийом"@uk .
+fb:DischargeProcess a rdfs:Class ; rdfs:subClassOf fb:WaitingOrganization ; rdfs:label "Процес виписки"@uk .
+fb:Cleanliness a rdfs:Class ; rdfs:subClassOf fb:Facilities ; rdfs:label "Чистота"@uk .
+fb:FoodQuality a rdfs:Class ; rdfs:subClassOf fb:Facilities ; rdfs:label "Харчування"@uk .
+fb:EquipmentCondition a rdfs:Class ; rdfs:subClassOf fb:Facilities ; rdfs:label "Стан обладнання"@uk .
+fb:RoomComfort a rdfs:Class ; rdfs:subClassOf fb:Facilities ; rdfs:label "Комфорт палати"@uk .
+fb:VitalsMonitoring a rdfs:Class ; rdfs:subClassOf fb:ConditionMonitoring ; rdfs:label "Вимірювання показників"@uk .
+fb:AlarmResponse a rdfs:Class ; rdfs:subClassOf fb:ConditionMonitoring ; rdfs:label "Реагування на сигнали тривоги"@uk .
+fb:FollowUpCare a rdfs:Class ; rdfs:subClassOf fb:ConditionMonitoring ; rdfs:label "Супровід після виписки"@uk .
+fb:Billing a rdfs:Class ; rdfs:subClassOf fb:Administration ; rdfs:label "Рахунки та оплата"@uk .
+fb:Documentation a rdfs:Class ; rdfs:subClassOf fb:Administration ; rdfs:label "Документи й довідки"@uk .
+fb:InsuranceSupport a rdfs:Class ; rdfs:subClassOf fb:Administration ; rdfs:label "Страхування"@uk .
+
+fb:FoodQuality fb:coOccursWith fb:RoomComfort .  # lift=6.333, support=67
+fb:VitalsMonitoring fb:coOccursWith fb:AlarmResponse .  # lift=4.911, support=71
+fb:Billing fb:coOccursWith fb:InsuranceSupport .  # lift=4.285, support=85
+fb:NurseCare fb:coOccursWith fb:PainManagement .  # lift=3.649, support=63
+fb:DischargeProcess fb:coOccursWith fb:Documentation .  # lift=3.516, support=108
+fb:PatientInformation fb:coOccursWith fb:EmergencyWait .  # lift=3.431, support=93
+fb:DischargeProcess fb:coOccursWith fb:FollowUpCare .  # lift=2.766, support=54
+fb:DoctorCommunication fb:coOccursWith fb:PatientInformation .  # lift=2.735, support=53
+fb:FollowUpCare fb:coOccursWith fb:Documentation .  # lift=1.948, support=34
+fb:DoctorCommunication fb:coOccursWith fb:EmergencyWait .  # lift=1.558, support=34

@@ -1,0 +1,45 @@
+{
+  "data_version": "1.0.0",
+  "generator_version": "1.0.0",
+  "seed": 42,
+  "n_feedback": 1500,
+  "created_at": "2026-11-18T23:07:21",
+  "duckdb": "2.0.0",
+  "pandas": "3.0.6",
+  "python": "3.12.3",
+  "synthetic": true,
+  "files": {
+    "dim_date.parquet": {
+      "rows": 638,
+      "sha256": "a637ab27391f53a4cc58cb2aa689029cfe332990ecd15d2da5d8d32c3bd25b99"
+    },
+    "dim_department.parquet": {
+      "rows": 10,
+      "sha256": "a89c6a290248beced0b92536f3297eb17c566bc186e139f899240e5df8d6e004"
+    },
+    "dim_patient.parquet": {
+      "rows": 819,
+      "sha256": "c32c6a49b67e932841fb151db23d64a9409996f87aa44c539a3f5b547db8bb96"
+    },
+    "dim_topic.parquet": {
+      "rows": 20,
+      "sha256": "e3e7c05e411a96c7ac2197053fba9027d3fd568e9f8ba2231f28216af2925800"
+    },
+    "dim_channel.parquet": {
+      "rows": 5,
+      "sha256": "270dfcad42540acc2f06089e718fe9198071bb70ad29cf9ae284786ca21b691f"
+    },
+    "dim_feedback.parquet": {
+      "rows": 1500,
+      "sha256": "bd03d5d45453c0d33d7553f0e169313b455363b7c5dc0048506d38b98a2bed98"
+    },
+    "fact_feedback_mention.parquet": {
+      "rows": 3096,
+      "sha256": "b35453fca3bc87b57e612447821dcdc2158d3d1a5d7065649f607660141799f0"
+    },
+    "topic_relation.parquet": {
+      "rows": 36,
+      "sha256": "7ae8d6a46b8ab317b7add2dc9a370d19bbf165a9a50fe566d98254e7970af6a7"
+    }
+  }
+}

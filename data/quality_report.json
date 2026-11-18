@@ -1,0 +1,105 @@
+{
+  "created_at": "2026-11-18T23:07:21",
+  "passed": 14,
+  "total": 14,
+  "checks": [
+    {
+      "id": "Q00",
+      "name": "Кількість рядків факту ≥ 1000",
+      "violations": 0,
+      "detail": "rows=3096",
+      "passed": true
+    },
+    {
+      "id": "Q01",
+      "name": "Унікальність mention_key",
+      "violations": 0,
+      "detail": "",
+      "passed": true
+    },
+    {
+      "id": "Q02",
+      "name": "Унікальність пари (feedback_id, topic_key)",
+      "violations": 0,
+      "detail": "",
+      "passed": true
+    },
+    {
+      "id": "Q03",
+      "name": "NOT NULL для ключів і обов'язкових мір",
+      "violations": 0,
+      "detail": "",
+      "passed": true
+    },
+    {
+      "id": "Q04",
+      "name": "Діапазон sentiment_score ∈ [-1; 1]",
+      "violations": 0,
+      "detail": "",
+      "passed": true
+    },
+    {
+      "id": "Q05",
+      "name": "Діапазон overall_rating ∈ [1; 5]",
+      "violations": 0,
+      "detail": "",
+      "passed": true
+    },
+    {
+      "id": "Q06",
+      "name": "wait_minutes ∈ [0; 1440] або NULL",
+      "violations": 0,
+      "detail": "",
+      "passed": true
+    },
+    {
+      "id": "Q07",
+      "name": "Узгодженість is_negative з sentiment_score (< -0.2)",
+      "violations": 0,
+      "detail": "",
+      "passed": true
+    },
+    {
+      "id": "Q08",
+      "name": "is_critical ⇒ is_negative",
+      "violations": 0,
+      "detail": "",
+      "passed": true
+    },
+    {
+      "id": "Q09",
+      "name": "Дати факту у межах періоду 2025-01-01..2026-09-30",
+      "violations": 0,
+      "detail": "",
+      "passed": true
+    },
+    {
+      "id": "Q10",
+      "name": "SCD2: версія пацієнта діє на дату відгуку",
+      "violations": 0,
+      "detail": "",
+      "passed": true
+    },
+    {
+      "id": "Q11",
+      "name": "SCD2: у кожного patient_id рівно одна поточна версія",
+      "violations": 0,
+      "detail": "",
+      "passed": true
+    },
+    {
+      "id": "Q12",
+      "name": "Критичні/негативні: wait_minutes заповнено лише для тем очікування",
+      "violations": 0,
+      "detail": "",
+      "passed": true
+    },
+    {
+      "id": "Q13",
+      "name": "Немає «сиріт» (sql/checks/orphans.sql)",
+      "violations": 0,
+      "detail": "date_key=0, department_key=0, patient_key=0, topic_key=0, channel_key=0, feedback_id=0",
+      "passed": true
+    }
+  ]
+}
